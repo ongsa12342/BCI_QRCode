@@ -210,9 +210,9 @@ while(1):
                 cv2.rectangle(img, start_point, end_point, color, thickness)
         else:
             if s == 4:
-                timestamp2 += 3/10
+                timestamp2 += 3
             else:
-                timestamp2 += 6/10
+                timestamp2 += 6
             s = (s +1)%5
             
 
