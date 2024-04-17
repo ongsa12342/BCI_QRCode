@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import time
 import scipy.signal as signal
-
+import pyautogui
 
 class Square:
     def __init__(self, posStart , posEnd, color, posX,posY,size) -> None:
@@ -129,9 +129,16 @@ class QRCode:
         for s in self.square:
             s.flick(img,self._frequencyArray[0][self._counter])
         self._counter = (self._counter + 1)%self.fps
-    
+
+
+
+# screen_width, screen_height = pyautogui.size()
+
+# print("Screen Width:", screen_width)
+# print("Screen Height:", screen_height)
+
 w = 1920
-h = 1080
+h = 1200
 marginX = 400
 marginY = 250
 
