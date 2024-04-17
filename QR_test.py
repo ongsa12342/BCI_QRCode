@@ -3,6 +3,7 @@ import numpy as np
 import time
 import scipy.signal as signal
 import pyautogui
+from pylsl import StreamInfo, StreamOutlet
 
 class Square:
     def __init__(self, posStart , posEnd, color, posX,posY,size) -> None:
@@ -169,13 +170,14 @@ timestamp = time.time()
 timestamp2 = time.time()
 
 s = 3
+
+info = StreamInfo('MyMarkerStream', 'Markers', 1, 0, 'string', 'event_marker_python')
+outlet = StreamOutlet(info)
+
 while(1):
     if (time.time() <= timestamp):
  
         img = np.zeros((1080, 1920, 3), dtype=np.uint8) + 255//2
-
-    
-        
 
         if (time.time() <= timestamp2):
             if(s<4):
@@ -186,7 +188,9 @@ while(1):
             if s == 0:
                 color = (0, 0, 255)
                 thickness = 5
-
+                currentRect = 0  # Replace this with your currentRect value
+                marker = 'cue_' + str(currentRect)
+                outlet.push_sample([marker])
                 start_point =(w//2 - marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
@@ -194,7 +198,9 @@ while(1):
             elif s == 1:
                 color = (0, 0, 255)
                 thickness = 5
-
+                currentRect = 1  # Replace this with your currentRect value
+                marker = 'cue_' + str(currentRect)
+                outlet.push_sample([marker])
                 start_point =(w//2 + marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
@@ -202,7 +208,9 @@ while(1):
             elif s == 2:
                 color = (0, 0, 255)
                 thickness = 5
-
+                currentRect = 2  # Replace this with your currentRect value
+                marker = 'cue_' + str(currentRect)
+                outlet.push_sample([marker])
                 start_point =(w//2 - marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
@@ -210,7 +218,9 @@ while(1):
             elif s == 3:
                 color = (0, 0, 255)
                 thickness = 5
-
+                currentRect = 3  # Replace this with your currentRect value
+                marker = 'cue_' + str(currentRect)
+                outlet.push_sample([marker])
                 start_point =(w//2 + marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
