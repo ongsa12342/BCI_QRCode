@@ -175,9 +175,10 @@ info = StreamInfo('MyMarkerStream', 'Markers', 1, 0, 'string', 'event_marker_pyt
 outlet = StreamOutlet(info)
 
 while(1):
+    img = np.zeros((1080, 1920, 3), dtype=np.uint8) + 255//2
     if (time.time() <= timestamp):
  
-        img = np.zeros((1080, 1920, 3), dtype=np.uint8) + 255//2
+        
 
         if (time.time() <= timestamp2):
             if(s<4):
@@ -190,7 +191,7 @@ while(1):
                 thickness = 5
                 currentRect = 0  # Replace this with your currentRect value
                 marker = 'cue_' + str(currentRect)
-                outlet.push_sample([marker])
+                # outlet.push_sample([marker])
                 start_point =(w//2 - marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
@@ -200,7 +201,7 @@ while(1):
                 thickness = 5
                 currentRect = 1  # Replace this with your currentRect value
                 marker = 'cue_' + str(currentRect)
-                outlet.push_sample([marker])
+                # outlet.push_sample([marker])
                 start_point =(w//2 + marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
@@ -210,7 +211,7 @@ while(1):
                 thickness = 5
                 currentRect = 2  # Replace this with your currentRect value
                 marker = 'cue_' + str(currentRect)
-                outlet.push_sample([marker])
+                # outlet.push_sample([marker])
                 start_point =(w//2 - marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
@@ -220,7 +221,7 @@ while(1):
                 thickness = 5
                 currentRect = 3  # Replace this with your currentRect value
                 marker = 'cue_' + str(currentRect)
-                outlet.push_sample([marker])
+                # outlet.push_sample([marker])
                 start_point =(w//2 + marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
