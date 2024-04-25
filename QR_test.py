@@ -4,9 +4,11 @@ import time
 import scipy.signal as signal
 import pyautogui
 from pylsl import StreamInfo, StreamOutlet
-
+bg = np.array((255,255,255))
 class Square:
     def __init__(self, posStart , posEnd, color, posX,posY,size) -> None:
+        # color : 0 black
+        #         1 white
         self.size = size//10
 
         self.posX = posX - self.size * 5
@@ -16,16 +18,21 @@ class Square:
         self.color = color
         
         self.margin = 3
-        self.gray = 255//2
         
 
         self.posStart = posStart
         self.posEnd = posEnd
     
     def flick(self, img,f):
-        cv2.rectangle(img, (self.posX + self.size*self.posStart[0] + self.margin, self.posY + self.size*self.posStart[1] + self.margin), 
+        if (self.color == 0):
+            cv2.rectangle(img, (self.posX + self.size*self.posStart[0] + self.margin, self.posY + self.size*self.posStart[1] + self.margin), 
                     (self.posX + self.size*self.posEnd[0] - self.margin, self.posY + self.size*self.posEnd[1]- self.margin), 
-                    (255-np.absolute(255*self.color - 255*f ), 255-np.absolute(255*self.color - 255*f ), 255-np.absolute(255*self.color - 255*f )),
+                    bg*f,
+                      -1)
+        else:
+             cv2.rectangle(img, (self.posX + self.size*self.posStart[0] + self.margin, self.posY + self.size*self.posStart[1] + self.margin), 
+                    (self.posX + self.size*self.posEnd[0] - self.margin, self.posY + self.size*self.posEnd[1]- self.margin), 
+                    (255*self.color, 255*self.color , 255*self.color),
                       -1)
 class QRCode:
     def __init__(self,posX,posY,frequency,size) -> None:
@@ -143,11 +150,11 @@ h = 1200
 marginX = 400
 marginY = 250
 
-size = 250
+size = 300
 
 qr1 = QRCode(posX = w//2 - marginX,
              posY = h//2 - marginY,
-             frequency = 7,
+             frequency = 10,
              size = size)
 
 qr2 = QRCode(posX = w//2 + marginX,
@@ -171,13 +178,18 @@ timestamp2 = time.time()
 
 s = 3
 
-info = StreamInfo('MyMarkerStream', 'Markers', 1, 0, 'string', 'event_marker_python')
-outlet = StreamOutlet(info)
 
 while(1):
-    img = np.zeros((1080, 1920, 3), dtype=np.uint8) + 255//2
     if (time.time() <= timestamp):
  
+
+        img = np.zeros((1080, 1920, 3), dtype=np.uint8)
+
+        # # Set the green channel to its maximum value (255)
+        # img[:,:,1] = 255
+
+        img[:,:,:] = 255//2
+    
         
 
         if (time.time() <= timestamp2):
@@ -190,8 +202,7 @@ while(1):
                 color = (0, 0, 255)
                 thickness = 5
                 currentRect = 0  # Replace this with your currentRect value
-                marker = 'cue_' + str(currentRect)
-                # outlet.push_sample([marker])
+                # outlet.push_sample([currentRect])
                 start_point =(w//2 - marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
@@ -199,9 +210,7 @@ while(1):
             elif s == 1:
                 color = (0, 0, 255)
                 thickness = 5
-                currentRect = 1  # Replace this with your currentRect value
-                marker = 'cue_' + str(currentRect)
-                # outlet.push_sample([marker])
+
                 start_point =(w//2 + marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
@@ -209,9 +218,7 @@ while(1):
             elif s == 2:
                 color = (0, 0, 255)
                 thickness = 5
-                currentRect = 2  # Replace this with your currentRect value
-                marker = 'cue_' + str(currentRect)
-                # outlet.push_sample([marker])
+
                 start_point =(w//2 - marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
@@ -219,16 +226,14 @@ while(1):
             elif s == 3:
                 color = (0, 0, 255)
                 thickness = 5
-                currentRect = 3  # Replace this with your currentRect value
-                marker = 'cue_' + str(currentRect)
-                # outlet.push_sample([marker])
+
                 start_point =(w//2 + marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
         else:
             if s == 4:
-                timestamp2 += 3
+                timestamp2 +=  10
             else:
                 timestamp2 += 6
             s = (s +1)%5
