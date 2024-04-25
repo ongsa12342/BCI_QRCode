@@ -3,37 +3,64 @@ import numpy as np
 import time
 import scipy.signal as signal
 import pyautogui
-from pylsl import StreamInfo, StreamOutlet
-bg = np.array((255,255,255))
+
 class Square:
-    def __init__(self, posStart , posEnd, color, posX,posY,size) -> None:
-        # color : 0 black
-        #         1 white
-        self.size = size//10
+    """
+     Represents a canvas that contains 10x10 blocks of squares.
 
-        self.posX = posX - self.size * 5
-        self.posY = posY - self.size * 5
+    """
 
+    def __init__(self, start_block: int, end_block: int, color: int, pixel_x: int, pixel_y: int, block_size: int,
+                 margin : int = 3,
+                 background_color: list = (255, 255, 255)) -> None:
+        """
+        Initializes a Square object.
 
+        Args:
+            start_block: The starting block of the square (lower left corner), represented as coordinates (0, 0) to (9, 9).
+            end_block: The ending block of the square (upper right corner), represented as coordinates (0, 0) to (9, 9).
+            color: An integer representing the color of the square (0 for black, 1 for white).
+            pixel_x: The x-coordinate position of the canvas in pixels.
+            pixel_y: The y-coordinate position of the canvas in pixels.
+            block_size: The size of the square's block.
+            margin:
+            background_color: 
+
+        """
+        self.block_size = block_size // 10
+        self.pixel_x = pixel_x - self.block_size * 5
+        self.pixel_y = pixel_y - self.block_size * 5
         self.color = color
-        
-        self.margin = 3
-        
-
-        self.posStart = posStart
-        self.posEnd = posEnd
+        self.margin = margin
+        self.background_color = np.array(background_color)
+        self.start_block = start_block
+        self.end_block = end_block
     
-    def flick(self, img,f):
-        if (self.color == 0):
-            cv2.rectangle(img, (self.posX + self.size*self.posStart[0] + self.margin, self.posY + self.size*self.posStart[1] + self.margin), 
-                    (self.posX + self.size*self.posEnd[0] - self.margin, self.posY + self.size*self.posEnd[1]- self.margin), 
-                    bg*f,
-                      -1)
+    def flick(self, img, flicker_state) -> None:
+        """
+        Draw the square on an image.
+
+        Args:
+            img: The image to draw the square on.
+            flicker_state: A variable indicating the state of flickering, where 0 represents the off state and 1 represents the on state. This variable controls whether the square is flickering on or off.
+
+        """
+
+        # if color black, flick 
+        if self.color == 0:
+            cv2.rectangle(img = img, 
+                          pt1 = (self.pixel_x + self.block_size * self.start_block[0] + self.margin, self.pixel_y + self.block_size * self.start_block[1] + self.margin), 
+                          pt2 = (self.pixel_x + self.block_size * self.end_block[0] - self.margin, self.pixel_y + self.block_size * self.end_block[1] - self.margin), 
+                          color = self.background_color * flicker_state,
+                          thickness = -1)
+        # if color white, just showing
         else:
-             cv2.rectangle(img, (self.posX + self.size*self.posStart[0] + self.margin, self.posY + self.size*self.posStart[1] + self.margin), 
-                    (self.posX + self.size*self.posEnd[0] - self.margin, self.posY + self.size*self.posEnd[1]- self.margin), 
-                    (255*self.color, 255*self.color , 255*self.color),
-                      -1)
+            cv2.rectangle(img = img, 
+                          pt1 = (self.pixel_x + self.block_size * self.start_block[0] + self.margin, self.pixel_y + self.block_size * self.start_block[1] + self.margin), 
+                          pt2 = (self.pixel_x + self.block_size * self.end_block[0] - self.margin, self.pixel_y + self.block_size * self.end_block[1] - self.margin), 
+                          color = (255,255,255),
+                          thickness = -1)
+
 class QRCode:
     def __init__(self,posX,posY,frequency,size) -> None:
         self.size = size
