@@ -3,6 +3,7 @@ import numpy as np
 import time
 import scipy.signal as signal
 import pyautogui
+from pylsl import StreamInfo, StreamOutlet
 
 class Square:
     """
@@ -186,7 +187,7 @@ qr1 = QRCode(posX = w//2 - marginX,
 
 qr2 = QRCode(posX = w//2 + marginX,
              posY = h//2 - marginY,
-             frequency = 10,
+             frequency = 1,
              size = size)
 
 qr3 = QRCode(posX = w//2 - marginX,
@@ -199,16 +200,24 @@ qr4 = QRCode(posX = w//2 + marginX,
              frequency = 17,
              size = size)
 
-
+# LSL stream setup
+info = StreamInfo("MyMarkerStream", "Markers", 1, 0, 'int32', 'myuidw43536')
+outlet = StreamOutlet(info)
+ 
 timestamp = time.time()  
 timestamp2 = time.time()
 
 s = 3
+prev_s = None
 
 
 while(1):
     if (time.time() <= timestamp):
- 
+        
+        if s != prev_s:
+            # Send s value through LSL
+            outlet.push_sample([s])
+            prev_s = s
 
         img = np.zeros((1080, 1920, 3), dtype=np.uint8)
 
@@ -217,8 +226,6 @@ while(1):
 
         img[:,:,:] = 255//2
     
-        
-
         if (time.time() <= timestamp2):
             if(s<4):
                 qr1.flick(img)
@@ -262,7 +269,7 @@ while(1):
             if s == 4:
                 timestamp2 +=  10
             else:
-                timestamp2 += 6
+                timestamp2 += 20
             s = (s +1)%5
             
 
