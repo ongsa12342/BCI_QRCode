@@ -3,7 +3,7 @@ import numpy as np
 import time
 import scipy.signal as signal
 import pyautogui
-from pylsl import StreamInfo, StreamOutlet
+import socket
 
 class Square:
     """
@@ -200,23 +200,21 @@ qr4 = QRCode(posX = w//2 + marginX,
              frequency = 17,
              size = size)
 
-# LSL stream setup
-info = StreamInfo("MyMarkerStream", "Markers", 1, 0, 'int32', 'myuidw43536')
-outlet = StreamOutlet(info)
- 
+ip_address = '127.0.0.1' 
+port = 12345 
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 timestamp = time.time()  
 timestamp2 = time.time()
 
 s = 3
 prev_s = None
 
-
 while(1):
     if (time.time() <= timestamp):
         
         if s != prev_s:
-            # Send s value through LSL
-            outlet.push_sample([s])
+            sock.sendto(s, (ip_address, port))
             prev_s = s
 
         img = np.zeros((1080, 1920, 3), dtype=np.uint8)
@@ -282,5 +280,6 @@ while(1):
     cv2.imshow('Flickering Squares', img)
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
+            sock.close()
             break
 cv2.destroyAllWindows()
