@@ -207,14 +207,15 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 timestamp = time.time()  
 timestamp2 = time.time()
 
-s = 3
+s = 0
 prev_s = None
+marker=[b'A000',b'B000',b'C000',b'D000',b'E000']
 
 while(1):
     if (time.time() <= timestamp):
         
         if s != prev_s:
-            sock.sendto(s, (ip_address, port))
+            sock.sendto(marker[s] , (ip_address, port))
             prev_s = s
 
         img = np.zeros((1080, 1920, 3), dtype=np.uint8)
