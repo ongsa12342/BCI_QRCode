@@ -62,9 +62,9 @@ class Square:
                           thickness = -1)
 
 class QRCode:
-    def __init__(self,posX,posY,frequency,size) -> None:
+    def __init__(self,posX,posY,frequency,size,fps) -> None:
         self.size = size
-        self.fps = 165
+        self.fps = fps
         self.period = 1 / self.fps
 
         self.posX = posX
@@ -166,94 +166,84 @@ class QRCode:
         self._counter = (self._counter + 1)%self.fps
 
 
-
 # screen_width, screen_height = pyautogui.size()
 
 # print("Screen Width:", screen_width)
 # print("Screen Height:", screen_height)
 
+# parameter
 w = 1920
-h = 1200
+h = 1080
+
+fps = 165
+
 marginX = 400
-marginY = 250
+marginY = 200
 
 size = 300
 
 qr1 = QRCode(posX = w//2 - marginX,
              posY = h//2 - marginY,
              frequency = 10,
-             size = size)
+             size = size,
+             fps=fps)
 
 qr2 = QRCode(posX = w//2 + marginX,
              posY = h//2 - marginY,
              frequency = 10,
-             size = size)
+             size = size,
+             fps=fps)
 
 qr3 = QRCode(posX = w//2 - marginX,
              posY = h//2 + marginY,
              frequency = 13,
-             size = size)
+             size = size,
+             fps=fps)
 
 qr4 = QRCode(posX = w//2 + marginX,
              posY = h//2 + marginY,
              frequency = 17,
-             size = size)
-
+             size = size,
+             fps=fps)
 
 timestamp = time.time()  
 timestamp2 = time.time()
 
 s = 3
-
+color = (0, 0, 255) #red
+thickness = 5
 
 while(1):
     if (time.time() <= timestamp):
  
 
-        img = np.zeros((1080, 1920, 3), dtype=np.uint8)
-
-        # # Set the green channel to its maximum value (255)
-        # img[:,:,1] = 255
-
+        img = np.zeros((h, w, 3), dtype=np.uint8)
         img[:,:,:] = 255//2
-    
-        
 
+    
         if (time.time() <= timestamp2):
             if(s<4):
                 qr1.flick(img)
                 qr2.flick(img)
                 qr3.flick(img)
                 qr4.flick(img)
+
             if s == 0:
-                color = (0, 0, 255)
-                thickness = 5
-                currentRect = 0  # Replace this with your currentRect value
-                # outlet.push_sample([currentRect])
                 start_point =(w//2 - marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
             elif s == 1:
-                color = (0, 0, 255)
-                thickness = 5
-
                 start_point =(w//2 + marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
             elif s == 2:
-                color = (0, 0, 255)
-                thickness = 5
-
                 start_point =(w//2 - marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
             elif s == 3:
-                color = (0, 0, 255)
-                thickness = 5
-
                 start_point =(w//2 + marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
@@ -264,14 +254,10 @@ while(1):
             else:
                 timestamp2 += 6
             s = (s +1)%5
-            
-
-
         
     else:
-        timestamp += 1/165
+        timestamp += 1/fps
 
-    
     cv2.imshow('Flickering Squares', img)
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
