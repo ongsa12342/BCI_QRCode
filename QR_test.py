@@ -173,15 +173,15 @@ class QRCode:
 # print("Screen Height:", screen_height)
 
 # parameter
-w = 1920
-h = 1080
+w = 3840
+h = 2160
 
-fps = 165
+fps = 60
 
-marginX = 400
-marginY = 200
+marginX = 1000
+marginY = 600
 
-size = 300
+size = 600
 
 qr1 = QRCode(posX = w//2 - marginX,
              posY = h//2 - marginY,
@@ -214,7 +214,7 @@ outlet = StreamOutlet(info)
 timestamp = time.time()  
 timestamp2 = time.time()
 
-s = 3
+s = 6
 color = (0, 0, 255) #red
 thickness = 5
 prev_s = None
@@ -232,39 +232,46 @@ while(1):
         img[:,:,:] = 255//2
     
         if (time.time() <= timestamp2):
-            if(s<4):
+            # print(s)
+            if(s<5):
                 qr1.flick(img)
                 qr2.flick(img)
                 qr3.flick(img)
                 qr4.flick(img)
 
             if s == 0:
+                start_point =(w//2 - size//2 - 10, h//2 - size//2 - 10)
+                end_point =(w//2 + size//2 + 10, h//2 + size//2 + 10)
+                
+                cv2.rectangle(img, start_point, end_point, color, thickness)
+                center = ((start_point[0] + end_point[0]) // 2, (start_point[1] + end_point[1]) // 2)
+
+                cv2.putText(img, '+', ((3840//2)-80,(2160//2)+60), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 255, 255), 6)
+            elif s == 1:
                 start_point =(w//2 - marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
-            elif s == 1:
+            elif s == 2:
                 start_point =(w//2 + marginX - size//2 - 10, h//2 - marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 - marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
-            elif s == 2:
+            elif s == 3:
                 start_point =(w//2 - marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 - marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
-            elif s == 3:
+            elif s == 4:
                 start_point =(w//2 + marginX - size//2 - 10, h//2 + marginY - size//2 - 10)
                 end_point =(w//2 + marginX + size//2 + 10, h//2 + marginY + size//2 + 10)
                 
                 cv2.rectangle(img, start_point, end_point, color, thickness)
+
         else:
-            if s == 4:
-                timestamp2 +=  10
-            else:
-                timestamp2 += 20
-            s = (s +1)%5
-        
+            timestamp2 += 20
+            s = (s +1)%7
+
     else:
         timestamp += 1/fps
 
