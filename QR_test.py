@@ -185,7 +185,7 @@ size = 600
 
 qr1 = QRCode(posX = w//2 - marginX,
              posY = h//2 - marginY,
-             frequency = 10,
+             frequency = 7,
              size = size,
              fps=fps)
 
@@ -214,7 +214,7 @@ outlet = StreamOutlet(info)
 timestamp = time.time()  
 timestamp2 = time.time()
 
-s = 6
+s = 3
 color = (0, 0, 255) #red
 thickness = 5
 prev_s = None
@@ -269,8 +269,8 @@ while(1):
                 cv2.rectangle(img, start_point, end_point, color, thickness)
 
         else:
-            timestamp2 += 20
-            s = (s +1)%7
+            timestamp2 += 15
+            s = (s +1)%6
 
     else:
         timestamp += 1/fps
