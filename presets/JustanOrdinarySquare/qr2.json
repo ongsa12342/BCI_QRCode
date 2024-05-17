@@ -1,0 +1,22 @@
+[
+    {
+        "start_block": [
+            0,
+            0
+        ],
+        "end_block": [
+            10,
+            10
+        ],
+        "color": 0.0,
+        "pixel_x": 1210,
+        "pixel_y": 190,
+        "block_size": 30,
+        "margin": 0,
+        "background_color": [
+            255,
+            255,
+            255
+        ]
+    }
+]
